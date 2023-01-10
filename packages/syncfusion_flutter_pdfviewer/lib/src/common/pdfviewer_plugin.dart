@@ -60,10 +60,14 @@ class PdfViewerPlugin {
   Future<Map<int, List<dynamic>>?> _getImage(int pageIndex, double currentScale,
       bool isZoomChanged, int currentPageNumber) async {
     if (_renderingPages != null &&
-        (!_hasRenderedImage(pageIndex, currentScale, false) ||
-            (isZoomChanged &&
-                pageIndex == currentPageNumber &&
-                !_hasRenderedImage(pageIndex, currentScale, true)))) {
+        (!_hasRenderedImage(pageIndex, currentScale, false)
+/*            ||
+            (*/
+/*                isZoomChanged &&
+                pageIndex == currentPageNumber &&*/
+                //!_hasRenderedImage(pageIndex, currentScale, true)
+            //)
+    )) {
       final RenderedImage renderedImage =
           RenderedImage(pageIndex, currentScale);
       _renderingPages!.add(renderedImage);
@@ -71,13 +75,13 @@ class PdfViewerPlugin {
           PdfViewerPlatform.instance
               .getImage(pageIndex, currentScale, _documentID!));
       Future<Uint8List?> imageFuture = _nativeImage!.value.whenComplete(() {
-        _renderingPages?.remove(renderedImage);
+        //_renderingPages?.remove(renderedImage);
       });
       if (!kIsDesktop) {
         final Future<Uint8List?> image = imageFuture;
         imageFuture = imageFuture.timeout(const Duration(milliseconds: 3000),
             onTimeout: () {
-          _renderingPages?.remove(renderedImage);
+          //_renderingPages?.remove(renderedImage);
           return null;
         });
         imageFuture = image;
@@ -121,10 +125,10 @@ class PdfViewerPlugin {
             (!_pageScale!.containsKey(pageIndex) ||
                 _pageScale![pageIndex] != currentScale)) {
           _pageScale![pageIndex] = currentScale;
-          await _getImage(
-              pageIndex, currentScale, isZoomChanged, currentPageNumber);
         }
       }
+      await _getImage(
+          pageIndex, currentScale, isZoomChanged, currentPageNumber);
     }
     final List<int> pdfPage = <int>[];
     _renderedPages?.forEach((int key, List<dynamic> value) {
@@ -140,10 +144,10 @@ class PdfViewerPlugin {
       }
     }
 
-    // ignore: avoid_function_literals_in_foreach_calls
+/*    // ignore: avoid_function_literals_in_foreach_calls
     pdfPage.forEach((int index) {
       _renderedPages?.remove(index);
-    });
+    });*/
     return Future<Map<int, List<dynamic>>?>.value(_renderedPages);
   }
 

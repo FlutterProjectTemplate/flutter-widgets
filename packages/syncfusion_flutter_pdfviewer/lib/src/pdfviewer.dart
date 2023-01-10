@@ -2670,12 +2670,13 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
       }
       return renderedPages;
     } else {
-      int startPage = (kIsDesktop && _pdfViewerController.pageNumber != 1)
+      int startPage = 0;
+      /*(kIsDesktop && _pdfViewerController.pageNumber != 1)
           ? _pdfViewerController.pageNumber - 1
-          : _pdfViewerController.pageNumber;
-      int endPage = _pdfViewerController.pageNumber;
+          : _pdfViewerController.pageNumber;*/
+      int endPage = _pdfViewerController.pageCount;
       Future<Map<int, List<dynamic>>?>? renderedPages;
-      if (_pdfPages.isNotEmpty && !_pdfDimension.isEmpty) {
+      /*if (_pdfPages.isNotEmpty && !_pdfDimension.isEmpty) {
         if (_pdfViewerController.pageCount == 1) {
           endPage = _pdfViewerController.pageCount;
         } else {
@@ -2689,11 +2690,12 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
             }
           }
         }
-      }
+      }*/
       if (_pdfViewerController.zoomLevel >= 2) {
         startPage = _endPage = _pdfViewerController.pageNumber;
       }
-      bool canRenderImage = !(_pdfScrollableStateKey.currentState
+      bool canRenderImage = true;
+/*          !(_pdfScrollableStateKey.currentState
                   ?.scrollHeadStateKey.currentState?.isScrollHeadDragged ??
               true) &&
           !(widget.scrollDirection == PdfScrollDirection.vertical
@@ -2702,7 +2704,7 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                   false
               : (_pdfScrollableStateKey.currentState?.isScrolled ?? false));
       if (_pdfScrollableStateKey.currentState?.isZoomChanged ?? false)
-        canRenderImage = true;
+        canRenderImage = true;*/
       renderedPages = _plugin
           .getSpecificPages(
               startPage,
